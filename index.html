@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Live Chat App</title>
+
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Bootstrap 5 CDN for responsive UI components -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        /* Set background color for the page */
+        body {
+            background-color: #f7f9fc;
+        }
+
+        /* Style for the messages box */
+        #messages {
+            height: 400px; /* Fixed height */
+            overflow-y: scroll; /* Enable scroll for overflow */
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Bootstrap container to center the content -->
+    <div class="container mt-4">
+        <h2 class="text-center">Live Chat</h2>
+
+        <!-- Unordered list to display chat messages -->
+        <ul id="messages" class="list-group mb-3"></ul>
+
+        <!-- Chat form with input field and send button -->
+        <form id="chat-form" class="input-group">
+            <!-- Input for typing messages -->
+            <input id="m" autocomplete="off" class="form-control" placeholder="Type a message..." />
+            <!-- Submit button -->
+            <button class="btn btn-primary">Send</button>
+        </form>
+
+        <!-- Hidden form to send a "Connected" message once user enters name -->
+        <form id="u" class="input-group">
+            <input id="n" type="hidden" value="Connected">
+        </form>
+    </div>
+
+    <!-- Load Socket.IO from server (should be served by backend) -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        // Connect to the server using Socket.IO
+        const socket = io();
+
+        // Initialize username variable
+        let username = '';
+
+        // Initialize empty object (not used in this code)
+        let ob = '';
+
+        // Get HTML elements
+        const u = document.getElementById('u');
+        const inputs = document.getElementById('n');
+        const messages = document.getElementById('messages');
+
+        // Ask the user to enter their name using a prompt
+        while (!username) {
+            username = prompt("Enter your name:");
+            // After user enters name, send a "Connected" message
+            call(username);
+        }
+
+        // Function to emit a "chat message" event with the connected message
+        function call(ob) {
+            socket.emit('chat message', { user: ob, text: inputs.value });
+        }
+
+        // Get the chat form and input field
+        const form = document.getElementById('chat-form');
+        const input = document.getElementById('m');
+
+        // Event listener for form submission
+        form.addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent page reload
+            if (input.value.trim()) {
+                // Send the message to the server with username and message text
+                socket.emit('chat message', { user: username, text: input.value });
+                input.value = ''; // Clear the input field
+            }
+        });
+
+        // Listen for incoming chat messages from the server
+        socket.on('chat message', function (msg) {
+            // Create a new list item for each message
+            const item = document.createElement('li');
+            item.classList.add('list-group-item');
+            // Display username and message text
+            item.innerHTML = `<strong>${msg.user}:</strong> ${msg.text}`;
+            messages.appendChild(item); // Add message to chat window
+            messages.scrollTop = messages.scrollHeight; // Auto-scroll to bottom
+        });
+    </script>
+</body>
+
+</html>
