@@ -56,3 +56,6 @@ On the frontend, incoming messages are dynamically added to the chat window with
 
 
 ![Image](https://github.com/user-attachments/assets/cdda4015-cd7c-4ae4-92bd-09ff22fd5f83)
+
+
+![Image](https://github.com/user-attachments/assets/f3a406f5-a4fa-494d-ab54-e00bb19f8877)
