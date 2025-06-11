@@ -49,3 +49,7 @@ The server listens for incoming chat messages from any client and immediately br
 
 **Frontend Display:
 On the frontend, incoming messages are dynamically added to the chat window with the sender's name and the message text. The chat container automatically scrolls to show the latest message.
+
+# Outputs
+
+![Image](https://github.com/user-attachments/assets/9e40389f-b853-45a9-af1c-69bd477f075f)
